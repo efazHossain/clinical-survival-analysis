@@ -1,0 +1,30 @@
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+
+# Raw/private clinical data
+data/raw/*
+!data/raw/.gitkeep
+
+# Generated processed data
+data/processed/*
+!data/processed/.gitkeep
+
+# Model artifacts / generated files
+*.joblib
+*.pkl
+*.npy
+*.parquet
+
+# Reports/output
+results/
+
+# OS/IDE
+.DS_Store
+.vscode/
+.idea/
