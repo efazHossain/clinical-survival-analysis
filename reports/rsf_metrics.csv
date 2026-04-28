@@ -1,0 +1,2 @@
+model,train_c_index,test_c_index,n_train,n_test,n_features
+Random Survival Forest,0.7388106634374513,0.6812942473940731,1584,396,34
