@@ -117,6 +117,24 @@ The pipeline generates:
 - RSF feature importance report
 - Consolidated clinical survival summary
 
+## Visual Results
+
+### Kaplan-Meier Survival by Tumor Stage
+
+![Kaplan-Meier by Tumor Stage](reports/figures/km_by_tumor_stage.png)
+
+### Kaplan-Meier Survival by ER Status
+
+![Kaplan-Meier by ER Status](reports/figures/km_by_er_status.png)
+
+### Cox Model Hazard Ratios
+
+![Cox Hazard Ratios](reports/figures/cox_hazard_ratios.png)
+
+### Random Survival Forest Feature Importance
+
+![RSF Feature Importance](reports/figures/rsf_feature_importance.png)
+
 ## Limitations
 
 This project is for analytical and educational purposes only. Results should not be interpreted as clinical guidance. Survival models may be affected by missingness, censoring patterns, cohort bias, and proportional hazards assumptions.
