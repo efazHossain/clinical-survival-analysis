@@ -1,5 +1,7 @@
 # Clinical Survival Analysis
 
+[![CI](https://github.com/efazHossain/clinical-survival-analysis/actions/workflows/ci.yml/badge.svg)](https://github.com/efazHossain/clinical-survival-analysis/actions/workflows/ci.yml)
+
 A reproducible survival analysis and machine learning project using METABRIC breast cancer clinical data to model patient survival risk, compare clinical groups, and identify key predictors of overall survival.
 
 ## Project Overview
@@ -43,6 +45,7 @@ clinical-survival-analysis/
 |   |-- sample/
 |   `-- README.md
 |-- notebooks/
+|-- .github/workflows/
 |-- src/
 |   |-- config.py
 |   |-- preprocessing.py
@@ -57,6 +60,7 @@ clinical-survival-analysis/
 |-- reports/
 |   `-- figures/
 |-- app.py
+|-- Makefile
 |-- MODEL_CARD.md
 |-- requirements.txt
 |-- pyproject.toml
@@ -75,6 +79,12 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
+Or with `make`:
+
+```bash
+make install
+```
+
 ## Data
 
 Place the METABRIC clinical TSV at:
@@ -90,10 +100,16 @@ See `data/README.md` for data provenance and reproducibility notes. Raw and proc
 Run the full analysis:
 
 ```bash
+make pipeline
+```
+
+Equivalent direct command:
+
+```bash
 python src/pipeline.py
 ```
 
-Or run individual steps:
+Individual steps:
 
 ```bash
 python src/prepare_data.py
@@ -106,17 +122,23 @@ python src/evaluate_models.py
 ## Tests
 
 ```bash
-pytest
+make test
 ```
 
 The tests cover the core preprocessing contract, Cox matrix preparation, survival target formatting, and event-rate summaries.
+
+Compile all scripts:
+
+```bash
+make compile
+```
 
 ## Dashboard
 
 Run the Streamlit dashboard after generating reports:
 
 ```bash
-streamlit run app.py
+make dashboard
 ```
 
 The dashboard shows Kaplan-Meier figures, log-rank results, Cox hazard ratios, Cox diagnostics, Random Survival Forest metrics, feature importance, calibration, and data-quality summaries.
