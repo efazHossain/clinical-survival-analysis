@@ -36,7 +36,9 @@ The pipeline prepares a canonical survival dataset, then runs:
 | ER Status log-rank p-value | 0.035 |
 | Cox PH C-index | 0.680 |
 | RSF test C-index | 0.684 |
+| RSF test C-index 95% CI | See `reports/rsf_metrics.csv` |
 | RSF mean time-dependent AUC | 0.718 |
+| RSF mean time-dependent AUC 95% CI | See `reports/rsf_metrics.csv` |
 | RSF integrated Brier score | 0.177 |
 
 ## Engineering Work
@@ -49,6 +51,7 @@ The repository now includes:
 - Pinned Python dependencies
 - A Streamlit dashboard for reviewing model outputs
 - A model card documenting intended use, limitations, and safety boundaries
+- Bootstrap confidence intervals for held-out RSF C-index and time-dependent AUC
 - Generated reproducibility metadata including package versions and raw-data SHA-256
 
 ## Interpretation
@@ -67,7 +70,6 @@ The Random Survival Forest provides a slightly higher test C-index than the Cox 
 
 ## Next Improvements
 
-- Add bootstrap confidence intervals for C-index and time-dependent AUC.
 - Add external validation on an independent survival cohort.
 - Add cohort filters to the Streamlit dashboard.
 - Add downloadable report exports from the dashboard.

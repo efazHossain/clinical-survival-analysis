@@ -42,7 +42,9 @@ The Random Survival Forest captures nonlinear interactions and ranks relative su
 |---|---:|---:|
 | Cox PH | C-index | 0.680 |
 | RSF | Test C-index | 0.684 |
+| RSF | Test C-index 95% CI | See `reports/rsf_metrics.csv` |
 | RSF | Mean time-dependent AUC | 0.718 |
+| RSF | Mean time-dependent AUC 95% CI | See `reports/rsf_metrics.csv` |
 | RSF | Integrated Brier score | 0.177 |
 
 ## Limitations

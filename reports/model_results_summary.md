@@ -31,9 +31,15 @@ Analyze breast cancer patient survival outcomes using Kaplan-Meier curves, log-r
 
 ## Random Survival Forest Performance
 
-| model                  |   train_c_index |   test_c_index |   n_train |   n_test |   n_train_events |   n_test_events |   n_features |   time_dependent_auc_mean |   integrated_brier_score |
-|:-----------------------|----------------:|---------------:|----------:|---------:|-----------------:|----------------:|-------------:|--------------------------:|-------------------------:|
-| Random Survival Forest |        0.738995 |       0.684117 |      1584 |      396 |              915 |             229 |           34 |                  0.718181 |                  0.17673 |
+| model                  |   train_c_index |   test_c_index |   n_train |   n_test |   n_train_events |   n_test_events |   n_features |   time_dependent_auc_mean |   integrated_brier_score |   bootstrap_repeats |   bootstrap_skipped |   test_c_index_ci_low |   test_c_index_ci_high |   time_dependent_auc_ci_low |   time_dependent_auc_ci_high |
+|:-----------------------|----------------:|---------------:|----------:|---------:|-----------------:|----------------:|-------------:|--------------------------:|-------------------------:|--------------------:|--------------------:|----------------------:|-----------------------:|----------------------------:|-----------------------------:|
+| Random Survival Forest |        0.738995 |       0.684117 |      1584 |      396 |              915 |             229 |           34 |                  0.718181 |                  0.17673 |                 300 |                   0 |              0.649678 |               0.719025 |                    0.677125 |                     0.766394 |
+
+## RSF Bootstrap Confidence Intervals
+
+- Test C-index 95% CI: 0.650 to 0.719.
+- Mean time-dependent AUC 95% CI: 0.677 to 0.766.
+- Bootstrap repeats: 300; skipped resamples: 0.
 
 ## Top Cox Model Hazard Ratios
 

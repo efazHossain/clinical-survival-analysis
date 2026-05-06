@@ -30,6 +30,32 @@ def add_table(lines: list[str], title: str, df: pd.DataFrame | None) -> None:
     lines.extend([f"## {title}", "", df.to_markdown(index=False), ""])
 
 
+def add_rsf_ci_note(lines: list[str], rsf: pd.DataFrame | None) -> None:
+    if rsf is None or rsf.empty:
+        return
+
+    row = rsf.iloc[0]
+    required_cols = [
+        "test_c_index_ci_low",
+        "test_c_index_ci_high",
+        "time_dependent_auc_ci_low",
+        "time_dependent_auc_ci_high",
+    ]
+    if not all(col in rsf.columns for col in required_cols):
+        return
+
+    lines.extend(
+        [
+            "## RSF Bootstrap Confidence Intervals",
+            "",
+            f"- Test C-index 95% CI: {row['test_c_index_ci_low']:.3f} to {row['test_c_index_ci_high']:.3f}.",
+            f"- Mean time-dependent AUC 95% CI: {row['time_dependent_auc_ci_low']:.3f} to {row['time_dependent_auc_ci_high']:.3f}.",
+            f"- Bootstrap repeats: {int(row.get('bootstrap_repeats', 0))}; skipped resamples: {int(row.get('bootstrap_skipped', 0))}.",
+            "",
+        ]
+    )
+
+
 def main() -> None:
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -56,6 +82,7 @@ def main() -> None:
     add_table(lines, "Cox Model Performance", cox_metrics)
     add_table(lines, "Stratified Cox Sensitivity Performance", cox_stratified_metrics)
     add_table(lines, "Random Survival Forest Performance", rsf)
+    add_rsf_ci_note(lines, rsf)
 
     if cox is not None:
         top_cox = cox.copy()

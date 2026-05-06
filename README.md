@@ -150,6 +150,8 @@ For deployment options, see `docs/dashboard_deployment.md`.
 
 For a concise project narrative covering the problem, approach, results, engineering work, interpretation, and limitations, see `docs/portfolio_case_study.md`.
 
+For suggested GitHub repository metadata, see `docs/github_repo_setup.md`.
+
 ## Outputs
 
 The pipeline generates:

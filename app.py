@@ -99,6 +99,15 @@ with tabs[2]:
     with right:
         show_image("RSF Calibration at 60 Months", FIGURES_DIR / "rsf_calibration_60_months.png")
     show_table("RSF Metrics", rsf_metrics)
+    if rsf_metrics is not None and not rsf_metrics.empty:
+        row = rsf_metrics.iloc[0]
+        if {"test_c_index_ci_low", "test_c_index_ci_high"}.issubset(rsf_metrics.columns):
+            st.caption(
+                "RSF test C-index 95% CI: "
+                f"{row['test_c_index_ci_low']:.3f} to {row['test_c_index_ci_high']:.3f}; "
+                "mean time-dependent AUC 95% CI: "
+                f"{row['time_dependent_auc_ci_low']:.3f} to {row['time_dependent_auc_ci_high']:.3f}."
+            )
     show_table("RSF Calibration", rsf_calibration)
     show_table("RSF Feature Importance", rsf_importance)
 

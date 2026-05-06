@@ -24,7 +24,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sksurv.ensemble import RandomSurvivalForest
-from sksurv.metrics import cumulative_dynamic_auc, integrated_brier_score
+from sksurv.metrics import concordance_index_censored, cumulative_dynamic_auc, integrated_brier_score
 
 from config import (
     FIGURES_DIR,
@@ -118,6 +118,73 @@ def survival_metric_summary(
         pass
 
     return metrics
+
+
+def bootstrap_interval(values: list[float], alpha: float = 0.05) -> tuple[float, float]:
+    clean_values = np.array([value for value in values if np.isfinite(value)], dtype=float)
+    if len(clean_values) == 0:
+        return np.nan, np.nan
+
+    return (
+        float(np.quantile(clean_values, alpha / 2)),
+        float(np.quantile(clean_values, 1 - alpha / 2)),
+    )
+
+
+def bootstrap_metric_intervals(
+    y_train: np.ndarray,
+    y_test: np.ndarray,
+    risk_scores: np.ndarray,
+    n_bootstraps: int = 300,
+) -> dict[str, float | int]:
+    """
+    Estimate held-out uncertainty for C-index and time-dependent AUC.
+
+    This resamples the test-set predictions rather than retraining the RSF, so it
+    captures evaluation-set uncertainty while keeping the pipeline lightweight.
+    """
+    rng = np.random.default_rng(RANDOM_STATE)
+    cindex_values: list[float] = []
+    auc_values: list[float] = []
+    skipped = 0
+
+    for _ in range(n_bootstraps):
+        indices = rng.integers(0, len(y_test), size=len(y_test))
+        y_boot = y_test[indices]
+        risk_boot = risk_scores[indices]
+
+        if len(np.unique(y_boot["event"])) < 2 or len(np.unique(y_boot["time"])) < 2:
+            skipped += 1
+            continue
+
+        try:
+            cindex_values.append(
+                float(concordance_index_censored(y_boot["event"], y_boot["time"], risk_boot)[0])
+            )
+        except Exception:
+            skipped += 1
+
+        times = evaluation_times(y_train, y_boot)
+        if len(times) == 0:
+            continue
+
+        try:
+            _, mean_auc = cumulative_dynamic_auc(y_train, y_boot, risk_boot, times)
+            auc_values.append(float(mean_auc))
+        except Exception:
+            continue
+
+    cindex_low, cindex_high = bootstrap_interval(cindex_values)
+    auc_low, auc_high = bootstrap_interval(auc_values)
+
+    return {
+        "bootstrap_repeats": n_bootstraps,
+        "bootstrap_skipped": skipped,
+        "test_c_index_ci_low": cindex_low,
+        "test_c_index_ci_high": cindex_high,
+        "time_dependent_auc_ci_low": auc_low,
+        "time_dependent_auc_ci_high": auc_high,
+    }
 
 
 def calibration_table(
@@ -222,7 +289,9 @@ def main() -> None:
 
     train_cindex = cindex_scorer(rsf, X_train, y_train)
     test_cindex = cindex_scorer(rsf, X_test, y_test)
+    test_risk_scores = rsf.predict(X_test)
     survival_metrics = survival_metric_summary(rsf, X_test, y_train, y_test)
+    bootstrap_metrics = bootstrap_metric_intervals(y_train, y_test, test_risk_scores)
 
     metrics = pd.DataFrame(
         [
@@ -236,6 +305,7 @@ def main() -> None:
                 "n_test_events": int(y_test["event"].sum()),
                 "n_features": X_processed.shape[1],
                 **survival_metrics,
+                **bootstrap_metrics,
             }
         ]
     )

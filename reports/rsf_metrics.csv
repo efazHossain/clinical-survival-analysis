@@ -1,2 +1,2 @@
-model,train_c_index,test_c_index,n_train,n_test,n_train_events,n_test_events,n_features,time_dependent_auc_mean,integrated_brier_score
-Random Survival Forest,0.7389949969380799,0.6841172740497594,1584,396,915,229,34,0.7181805973870694,0.17672976248128947
+model,train_c_index,test_c_index,n_train,n_test,n_train_events,n_test_events,n_features,time_dependent_auc_mean,integrated_brier_score,bootstrap_repeats,bootstrap_skipped,test_c_index_ci_low,test_c_index_ci_high,time_dependent_auc_ci_low,time_dependent_auc_ci_high
+Random Survival Forest,0.7389949969380799,0.6841172740497594,1584,396,915,229,34,0.7181805973870694,0.17672976248128947,300,0,0.6496782415790432,0.7190248373600429,0.677124670466324,0.7663940005852437
