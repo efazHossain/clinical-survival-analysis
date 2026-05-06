@@ -59,6 +59,7 @@ clinical-survival-analysis/
 |-- tests/
 |-- reports/
 |   `-- figures/
+|-- docs/
 |-- app.py
 |-- Makefile
 |-- MODEL_CARD.md
@@ -142,6 +143,12 @@ make dashboard
 ```
 
 The dashboard shows Kaplan-Meier figures, log-rank results, Cox hazard ratios, Cox diagnostics, Random Survival Forest metrics, feature importance, calibration, and data-quality summaries.
+
+For deployment options, see `docs/dashboard_deployment.md`.
+
+## Portfolio Case Study
+
+For a concise project narrative covering the problem, approach, results, engineering work, interpretation, and limitations, see `docs/portfolio_case_study.md`.
 
 ## Outputs
 
