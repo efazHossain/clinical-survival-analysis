@@ -73,7 +73,7 @@ clinical-survival-analysis/
 From WSL:
 
 ```bash
-cd /mnt/c/Users/efazh/Projects/clinical-survival-analysis
+cd /path/to/clinical-survival-analysis
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip

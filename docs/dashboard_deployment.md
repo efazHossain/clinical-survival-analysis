@@ -7,7 +7,7 @@ This project includes a Streamlit dashboard in `app.py`.
 From WSL:
 
 ```bash
-cd /mnt/c/Users/efazh/Projects/clinical-survival-analysis
+cd /path/to/clinical-survival-analysis
 source .venv/bin/activate
 make dashboard
 ```
