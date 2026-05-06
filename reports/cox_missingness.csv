@@ -1,0 +1,13 @@
+column,missing_count,missing_rate
+Age at Diagnosis,0,0.0
+Neoplasm Histologic Grade,87,0.04393939393939394
+Lymph nodes examined positive,76,0.03838383838383838
+Nottingham prognostic index,1,0.000505050505050505
+Tumor Size,25,0.012626262626262626
+Tumor Stage,514,0.2595959595959596
+Chemotherapy,1,0.000505050505050505
+Hormone Therapy,1,0.000505050505050505
+Radio Therapy,1,0.000505050505050505
+ER Status,0,0.0
+HER2 Status,1,0.000505050505050505
+PR Status,1,0.000505050505050505

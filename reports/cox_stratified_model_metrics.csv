@@ -1,0 +1,2 @@
+model,concordance_index,n_rows,n_events,n_features,penalizer,strata
+Stratified Cox sensitivity,0.5884232047022745,1980,1144,13,0.1,age_group; npi_group; tumor_stage_strata; er_status_strata

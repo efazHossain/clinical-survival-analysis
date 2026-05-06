@@ -1,12 +1,10 @@
 # Clinical Survival Analysis
 
-A survival analysis and machine learning project using METABRIC breast cancer clinical data to model patient survival risk, compare clinical groups, and identify key predictors of overall survival.
+A reproducible survival analysis and machine learning project using METABRIC breast cancer clinical data to model patient survival risk, compare clinical groups, and identify key predictors of overall survival.
 
 ## Project Overview
 
-This project applies statistical survival analysis and machine learning methods to breast cancer clinical data. The goal is to understand which patient and tumor characteristics are associated with survival outcomes and to build interpretable models that estimate patient risk over time.
-
-The project combines traditional survival analysis with machine learning methods, including Kaplan-Meier curves, log-rank tests, Cox proportional hazards modeling, and Random Survival Forests.
+This project applies statistical survival analysis and machine learning methods to breast cancer clinical data. It combines Kaplan-Meier curves, log-rank tests, Cox proportional hazards modeling, and Random Survival Forests.
 
 ## Clinical Question
 
@@ -22,80 +20,80 @@ Which clinical and tumor-related factors are associated with differences in over
 | Survival Analysis | lifelines, scikit-survival |
 | Machine Learning | scikit-learn, Random Survival Forest |
 | Reporting | Jupyter Notebook, Markdown |
+| Testing | pytest |
+| Dashboard | Streamlit |
 
 ## Methods
 
 - Exploratory data analysis
 - Kaplan-Meier survival curves
 - Log-rank hypothesis testing
-- Cox proportional hazards modeling
-- Proportional hazards assumption checks
+- Cox proportional hazards modeling with assumption diagnostics
+- Stratified Cox sensitivity modeling for PH-flagged variables
 - Random Survival Forest modeling
-- Feature importance analysis
-
-## Key Results
-
-| Analysis | Result |
-|---|---|
-| Tumor Stage log-rank test | p = 9.35e-27 |
-| ER Status log-rank test | p = 0.035 |
-| Random Survival Forest train C-index | 0.739 |
-| Random Survival Forest test C-index | 0.681 |
-| RSF feature count | 34 features |
-
-## Model Interpretation
-
-The Cox proportional hazards model identified several clinically relevant survival predictors, including:
-
-- Age at diagnosis
-- Tumor stage
-- HER2 status
-- Lymph nodes examined positive
-- Nottingham prognostic index
-- Radio therapy status
-
-The Random Survival Forest model was used to capture nonlinear survival patterns and rank patients by relative survival risk.
+- Concordance index, time-dependent AUC, integrated Brier score, calibration, and permutation feature importance
 
 ## Project Structure
 
 ```text
 clinical-survival-analysis/
-│
-├── data/
-│   ├── raw/
-│   ├── processed/
-│   └── sample/
-│
-├── notebooks/
-│   ├── 01_eda_km_logrank.ipynb
-│   ├── 02_cox_model.ipynb
-│   └── 03_ml_survival_rsf.ipynb
-│
-├── src/
-│   ├── prepare_data.py
-│   ├── run_kaplan_meier.py
-│   ├── train_cox_model.py
-│   ├── train_random_survival_forest.py
-│   ├── evaluate_models.py
-│   ├── preprocessing.py
-│   └── survival_utils.py
-│
-├── reports/
-│   ├── figures/
-│   ├── cox_hazard_ratios.csv
-│   ├── cox_model_summary.csv
-│   ├── logrank_results.csv
-│   ├── model_results_summary.md
-│   ├── rsf_feature_importance.csv
-│   └── rsf_metrics.csv
-│
-├── requirements.txt
-└── README.md
+|-- data/
+|   |-- raw/
+|   |-- processed/
+|   |-- sample/
+|   `-- README.md
+|-- notebooks/
+|-- src/
+|   |-- config.py
+|   |-- preprocessing.py
+|   |-- survival_utils.py
+|   |-- prepare_data.py
+|   |-- run_kaplan_meier.py
+|   |-- train_cox_model.py
+|   |-- train_random_survival_forest.py
+|   |-- evaluate_models.py
+|   `-- pipeline.py
+|-- tests/
+|-- reports/
+|   `-- figures/
+|-- app.py
+|-- MODEL_CARD.md
+|-- requirements.txt
+|-- pyproject.toml
+`-- README.md
 ```
+
+## Setup
+
+From WSL:
+
+```bash
+cd /mnt/c/Users/efazh/Projects/clinical-survival-analysis
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+## Data
+
+Place the METABRIC clinical TSV at:
+
+```text
+data/raw/metabric_clinical_data.tsv
+```
+
+See `data/README.md` for data provenance and reproducibility notes. Raw and processed data are ignored by Git; generated reports include row counts, event counts, event rate, package versions, and the raw file SHA-256 hash.
 
 ## Reproducible Pipeline
 
-Run the full analysis pipeline:
+Run the full analysis:
+
+```bash
+python src/pipeline.py
+```
+
+Or run individual steps:
 
 ```bash
 python src/prepare_data.py
@@ -105,16 +103,36 @@ python src/train_random_survival_forest.py
 python src/evaluate_models.py
 ```
 
+## Tests
+
+```bash
+pytest
+```
+
+The tests cover the core preprocessing contract, Cox matrix preparation, survival target formatting, and event-rate summaries.
+
+## Dashboard
+
+Run the Streamlit dashboard after generating reports:
+
+```bash
+streamlit run app.py
+```
+
+The dashboard shows Kaplan-Meier figures, log-rank results, Cox hazard ratios, Cox diagnostics, Random Survival Forest metrics, feature importance, calibration, and data-quality summaries.
+
 ## Outputs
 
 The pipeline generates:
 
 - Cleaned survival modeling dataset
+- Data profile with row counts, event rate, and raw data hash
+- Runtime package version report
 - Kaplan-Meier survival plots
 - Log-rank test results
-- Cox model hazard ratios
-- Random Survival Forest C-index metrics
-- RSF feature importance report
+- Cox model metrics, hazard ratios, missingness report, and proportional hazards diagnostics
+- Stratified Cox sensitivity metrics and diagnostics for PH-flagged variables
+- Random Survival Forest metrics, calibration table, feature importance report, and model artifact
 - Consolidated clinical survival summary
 
 ## Visual Results
@@ -135,14 +153,29 @@ The pipeline generates:
 
 ![RSF Feature Importance](reports/figures/rsf_feature_importance.png)
 
+## Current Results
+
+Previously generated reports in this repository include:
+
+| Analysis | Result |
+|---|---|
+| Tumor Stage log-rank test | p = 9.35e-27 |
+| ER Status log-rank test | p = 0.035 |
+| Cox PH C-index | 0.680 |
+| Random Survival Forest test C-index | 0.684 |
+| Random Survival Forest mean time-dependent AUC | 0.718 |
+| Random Survival Forest integrated Brier score | 0.177 |
+| RSF feature count | 34 features |
+
+These values should be refreshed with `python src/pipeline.py` after dependency or preprocessing changes.
+
 ## Limitations
 
-This project is for analytical and educational purposes only. Results should not be interpreted as clinical guidance. Survival models may be affected by missingness, censoring patterns, cohort bias, and proportional hazards assumptions.
+This project is for analytical and educational purposes only. Results should not be interpreted as clinical guidance. Missing survival status is currently encoded as non-event/censored during preprocessing, which should be reviewed before clinical interpretation. Survival models may be affected by missingness, censoring patterns, cohort bias, proportional hazards violations, and dataset provenance.
 
 ## Future Improvements
 
-- Add model calibration analysis
-- Add time-dependent AUC evaluation
-- Add partial dependence plots for Random Survival Forest predictions
-- Build a lightweight Streamlit dashboard for interactive survival-risk exploration
-- Add a formal model card covering intended use, limitations, and ethical considerations
+- Add bootstrap confidence intervals for C-index and time-dependent AUC
+- Add partial dependence or accumulated local effects for Random Survival Forest predictions
+- Add external validation on an independent survival cohort
+- Extend the dashboard with cohort filters and downloadable summaries

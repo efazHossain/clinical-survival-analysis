@@ -1,0 +1,2 @@
+model,concordance_index,n_rows,n_events,n_features,penalizer
+Cox proportional hazards,0.6795825589918629,1980,1144,17,0.1

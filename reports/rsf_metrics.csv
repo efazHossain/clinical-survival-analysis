@@ -1,2 +1,2 @@
-model,train_c_index,test_c_index,n_train,n_test,n_features
-Random Survival Forest,0.7388106634374513,0.6812942473940731,1584,396,34
+model,train_c_index,test_c_index,n_train,n_test,n_train_events,n_test_events,n_features,time_dependent_auc_mean,integrated_brier_score
+Random Survival Forest,0.7389949969380799,0.6841172740497594,1584,396,915,229,34,0.7181805973870694,0.17672976248128947

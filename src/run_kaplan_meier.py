@@ -9,18 +9,12 @@ Outputs:
 
 from __future__ import annotations
 
-from pathlib import Path
-
 import matplotlib.pyplot as plt
 import pandas as pd
 from lifelines import KaplanMeierFitter
 from lifelines.statistics import multivariate_logrank_test
 
-
-ROOT_DIR = Path(__file__).resolve().parents[1]
-DATA_PATH = ROOT_DIR / "data" / "processed" / "metabric_survival_processed.csv"
-REPORTS_DIR = ROOT_DIR / "reports"
-FIGURES_DIR = REPORTS_DIR / "figures"
+from config import FIGURES_DIR, PROCESSED_PATH, REPORTS_DIR
 
 
 def plot_km_by_group(df: pd.DataFrame, group_col: str, output_name: str) -> None:
@@ -48,7 +42,7 @@ def plot_km_by_group(df: pd.DataFrame, group_col: str, output_name: str) -> None
     plt.close()
 
 
-def run_logrank(df: pd.DataFrame, group_col: str) -> dict:
+def run_logrank(df: pd.DataFrame, group_col: str) -> dict[str, float | int | str]:
     subset = df.dropna(subset=[group_col, "duration_months", "event"]).copy()
 
     result = multivariate_logrank_test(
@@ -62,20 +56,22 @@ def run_logrank(df: pd.DataFrame, group_col: str) -> dict:
         "test_statistic": float(result.test_statistic),
         "p_value": float(result.p_value),
         "n": int(len(subset)),
+        "n_events": int(subset["event"].sum()),
+        "n_groups": int(subset[group_col].nunique()),
     }
 
 
 def main() -> None:
-    if not DATA_PATH.exists():
+    if not PROCESSED_PATH.exists():
         raise FileNotFoundError(
-            f"Processed file not found: {DATA_PATH}\n"
+            f"Processed file not found: {PROCESSED_PATH}\n"
             "Run: python src/prepare_data.py"
         )
 
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
-    df = pd.read_csv(DATA_PATH)
+    df = pd.read_csv(PROCESSED_PATH)
 
     plot_targets = {
         "Tumor Stage": "km_by_tumor_stage.png",

@@ -16,6 +16,7 @@ data/processed/*
 !data/processed/.gitkeep
 
 # Model artifacts / generated files
+models/
 *.joblib
 *.pkl
 *.npy
